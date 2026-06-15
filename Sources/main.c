@@ -3,6 +3,7 @@
 #include <string.h>
 #include <time.h>
 #include <errno.h>
+#include <unistd.h> // Necesario para getopt
 
 // ==========================================
 // BLOQUE 1: MACROS Y ESTRUCTURAS
@@ -82,8 +83,21 @@ void crearUsuario(Usuario *lista, int *total) {
     nuevo->id = (*total) > 0 ? (lista + (*total - 1))->id + 1 : 1; // ID auto-incremental
     nuevo->estado = ACTIVO;
 
-    printf("Ingrese usuario (max 15 chars): ");
-    fgets(nuevo->usuario, MAX_STR, stdin); limpiarSaltoDeLinea(nuevo->usuario);
+    int flag = 1;
+    while (flag) {
+        printf("Ingrese usuario (max 15 chars): ");
+        fgets(nuevo->usuario, MAX_STR, stdin); limpiarSaltoDeLinea(nuevo->usuario);
+        
+        Usuario *p = lista;
+        for (int i = 0; i < total; i++) {
+            if (strcmp(p->usuario, nuevo->usuario) == 0) {
+                printf("el usuario ya existe"); // Retorna la dirección de memoria exacta donde está el usuario
+            }
+        break;
+        
+        }
+        flag = 0;
+    }
 
     printf("Ingrese nombre completo: ");
     fgets(nuevo->nombreCompleto, MAX_STR * 2, stdin); limpiarSaltoDeLinea(nuevo->nombreCompleto);
@@ -246,12 +260,31 @@ void guardarUsuarios(Usuario *lista, int total) {
 // ==========================================
 // MAIN: FLUJO Y UI
 // ==========================================
-int main() {
+int main(int argc, char *argv[]) {
 
+    int opt;
+    char *nombre_archivo = "usuarios.dat";
+    char *nombre_transacciones = "usuarios.dat";
     FILE *archivo;
     const char *ruta = "usuarios.dat";
     char caracter;
     int totalUsuarios = 0;
+
+    // Los dos puntos ':' indican que la opción '-n' requiere un valor adicional
+    while ((opt = getopt(argc, argv, "au:")) != -1) {
+        switch (opt) {
+            case 'u':
+                nombre_archivo = optarg;
+                break;
+            case 'a':
+                nombre_transacciones = optarg; // optarg guarda el valor pasado a -n
+                break;
+            default:
+                exit(1);
+        }
+    }
+
+    
 
     archivo = fopen(ruta, "r");
 
