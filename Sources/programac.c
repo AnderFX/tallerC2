@@ -247,6 +247,28 @@ void guardarUsuarios(Usuario *lista, int total) {
 // MAIN: FLUJO Y UI
 // ==========================================
 int main() {
+
+    FILE *archivo;
+    const char *ruta = "usuarios.dat";
+    char caracter;
+    int totalUsuarios = 0;
+
+    archivo = fopen(ruta, "r");
+
+    // Si el archivo usuarios.dat ya se creó
+    if (archivo != NULL) {
+
+        while ((caracter = fgetc(archivo)) != EOF) {
+            if (caracter == '\n') {
+                totalUsuarios++;
+            }
+        }   
+
+        cargarUsuarios(ruta, &totalUsuarios);
+        
+        fclose(archivo); // Recuerda cerrarlo siempre que lo abras
+    }
+
     Usuario *listaUsuarios = malloc(MAX_USUARIOS * sizeof(Usuario));
     if (!listaUsuarios) {
         printf("Error fatal: Memoria insuficiente.\n"); return 1;
