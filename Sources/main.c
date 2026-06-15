@@ -3,6 +3,8 @@
 #include <string.h>
 #include <time.h>
 #include <errno.h>
+#include "usuario.h"
+#include "log.h"
 
 #define MAX_USUARIOS 20
 #define MAX_STR 16 // 15 caracteres + '\0'

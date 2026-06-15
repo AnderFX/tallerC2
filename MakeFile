@@ -1,0 +1,17 @@
+all: programa
+
+programa= main.o  usuario.o log.o
+	gcc -o programa main.o  usuario.o log.o
+
+main.o= main.c 
+	gcc -c main.c
+
+usuario.o= usuario.c archivo.h
+	gcc -c usuario.c
+
+log.o= log.c archivos.h
+	gcc -o log.c
+
+clean:
+	rm -f programa*.o
+
